@@ -1,0 +1,131 @@
+## 🛣️ Roadmap: Step-by-Step Auth Service (Monolithic)
+
+### ✅ Phase 1: Setup Project Environment
+
+1. Initialize Node.js project with `npm init -y`
+2. Install dependencies:
+   `express`, `mongoose`, `bcryptjs`, `jsonwebtoken`, `dotenv`, `cors`
+3. Setup folder structure
+4. Create a `.env` file and set variables (`PORT`, `MONGO_URI`, `JWT_SECRET`)
+
+
+Procedure->
+1. Initialize Node.js project
+npm init -y
+
+Creates a package.json file with default values.
+This file manages your dependencies and scripts.
+
+
+2. Install required dependencies
+npm install express mongoose bcryptjs jsonwebtoken dotenv cors
+
+This installs:
+express – for the HTTP server.
+mongoose – to interact with MongoDB.
+bcryptjs – to hash passwords securely.
+jsonwebtoken – to create and verify JWTs for authentication.
+dotenv – to use environment variables from a .env file.
+cors – to handle cross-origin requests.
+
+3. Create .env file in project root
+
+5. Create server.js file
+
+6. Add dev script to package.json
+"scripts": {
+  "dev": "node server.js"
+}
+
+7. Run MongoDB server (in a separate terminal)
+
+
+
+---
+
+### ✅ Phase 2: Setup Server and Database
+
+1. Create `server.js` and initialize Express app
+2. Connect to MongoDB using Mongoose
+3. Setup middleware: `express.json()`, `cors`
+
+---
+
+### ✅ Phase 3: Build Auth Functionality
+
+1. Create **User Model** (`models/User.js`)
+2. Create **Auth Routes** (`routes/auth.js`)
+3. Create **Controller Logic** (`controllers/authController.js`)
+
+   * `registerUser()`
+   * `loginUser()`
+4. Hash passwords with `bcryptjs`
+5. Generate JWT on successful login
+
+---
+
+### ✅ Phase 4: Protect Routes (Optional Now, Required Later)
+
+1. Create middleware `authMiddleware.js`
+
+   * Verify JWT token
+   * Attach user to request
+2. Use middleware in protected recipe routes (once recipe service is ready)
+
+---
+
+### ✅ Phase 5: Test with Postman or frontend
+
+* Test `/auth/register` and `/auth/login`
+* Receive token in response
+* Use token to access protected routes (later in Recipe Service)
+
+1. register
+
+curl -X POST http://localhost:5000/auth/register ^
+-H "Content-Type: application/json" ^
+-d "{\"name\": \"Abdul Jabbar\", \"email\": \"abdul@example.com\", \"password\": \"supersecure123\"}"
+
+2. login
+
+curl -X POST http://localhost:5000/auth/login ^
+-H "Content-Type: application/json" ^
+-d "{\"email\": \"abdul@example.com\", \"password\": \"supersecure123\"}"
+
+---
+
+## 📊 Text-Based Diagram: Auth Service Flow
+
+```
+            +------------+       POST /auth/register         +------------+
+Frontend -->|   Register |----------------------------------->| Auth Route |
+            +------------+                                   +------------+
+                                                            | Validate & |
+                                                            | Hash pwd   |
+                                                            | Create user|
+                                                            +------------+
+                                                                   |
+                                                                   v
+                                                            +------------+
+                                                            | MongoDB    |
+                                                            | Users      |
+                                                            +------------+
+
+
+            +---------+         POST /auth/login            +------------+
+Frontend -->|  Login  |------------------------------------->| Auth Route |
+            +---------+                                     +------------+
+                                                           | Find user  |
+                                                           | Compare pwd|
+                                                           | Create JWT |
+                                                           +------------+
+                                                                   |
+                                                                   v
+                                                       +----------------------+
+                                                       |  Response (token)    |
+                                                       +----------------------+
+
+```
+
+---
+
